@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login & Signup</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 320px;
+            box-shadow: 0 0 10px gray;
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .link {
+            color: blue;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .show-password{
+display: flex;
+align-items: center;
+gap: 8px;
+justify-content: center;
+margin: 10px 0;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2 id="title">Login</h2>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <div class="show-password">
+<input type="checkbox" onclick="togglePassword()">
+<label>Show Password</label>
+</div>
+
+    <button onclick="submitForm()">Login</button>
+
+    <p id="msg"></p>
+
+    <p class="link" onclick="toggleForm()">Don't have an account? Signup</p>
+</div>
+
+<script>
+    let isLogin = true;
+
+    function toggleForm() {
+        isLogin = !isLogin;
+        document.getElementById("title").innerText = isLogin ? "Login" : "Signup";
+        document.querySelector("button").innerText = isLogin ? "Login" : "Signup";
+        document.querySelector(".link").innerText = isLogin 
+            ? "Don't have an account? Signup" 
+            : "Already have an account? Login";
+        document.getElementById("msg").innerText = "";
+    }
+
+    function togglePassword() {
+        let pass = document.getElementById("password");
+        pass.type = pass.type === "password" ? "text" : "password";
+    }
+
+    function submitForm() {
+        let user = document.getElementById("username").value;
+        let pass = document.getElementById("password").value;
+        let msg = document.getElementById("msg");
+
+        if (user === "" || pass === "") {
+            msg.innerText = "All fields are required";
+            msg.style.color = "red";
+            return;
+        }
+
+        if (pass.length < 4) {
+            msg.innerText = "Password must be at least 4 characters";
+            msg.style.color = "red";
+            return;
+        }
+
+        if (isLogin) {
+            let savedUser = localStorage.getItem("user");
+            let savedPass = localStorage.getItem("pass");
+
+            if (user === savedUser && pass === savedPass) {
+                msg.innerText = "Login Successful ✅";
+                msg.style.color = "green";
+            } else {
+                msg.innerText = "Invalid Credentials ❌";
+                msg.style.color = "red";
+            }
+        } else {
+            localStorage.setItem("user", user);
+            localStorage.setItem("pass", pass);
+
+            msg.innerText = "Signup Successful ✅ Now Login";
+            msg.style.color = "green";
+        }
+    }
+</script>
+
+</body>
+</html>

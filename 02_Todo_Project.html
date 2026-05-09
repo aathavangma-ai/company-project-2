@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #36d1dc, #5b86e5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+
+        input {
+            width: 70%;
+            padding: 8px;
+        }
+
+        button {
+            padding: 8px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .done {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>To-Do List</h2>
+
+    <input type="text" id="task">
+    <button onclick="addTask()">Add</button>
+
+    <ul id="list"></ul>
+</div>
+
+<script>
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    function show() {
+        let list = document.getElementById("list");
+        list.innerHTML = "";
+
+        tasks.forEach((t, i) => {
+            let li = document.createElement("li");
+
+            li.innerHTML = `
+                <span onclick="toggle(${i})" class="${t.done ? 'done' : ''}">
+                    ${t.text}
+                </span>
+                <button onclick="removeTask(${i})">❌</button>
+            `;
+
+            list.appendChild(li);
+        });
+    }
+
+    function addTask() {
+        let task = document.getElementById("task").value;
+
+        if (task === "") {
+            alert("Enter task");
+            return;
+        }
+
+        tasks.push({text: task, done: false});
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        document.getElementById("task").value = "";
+        show();
+    }
+
+    function toggle(i) {
+        tasks[i].done = !tasks[i].done;
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        show();
+    }
+
+    function removeTask(i) {
+        tasks.splice(i, 1);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        show();
+    }
+
+    show();
+</script>
+
+</body>
+</html>
